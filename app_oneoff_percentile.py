@@ -71,6 +71,9 @@ with col1:
             if pWin:
                 result_pair_counter[(final_pStamina, final_pLuck)] += 1
                 player_result_pairs.append((final_pStamina, final_pLuck))
+            else:
+                result_pair_counter[("0", "0")] += 1
+                player_result_pairs.append(("0", "0"))
 
         st.subheader("Single Roll Fight Simulator")
 
