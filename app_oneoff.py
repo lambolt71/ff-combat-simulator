@@ -1,36 +1,31 @@
 
 import streamlit as st
 import random
-import statistics
 import time
 from collections import Counter
 import pandas as pd
 
+st.set_page_config(page_title="FF Combat One-Off", layout="centered")
 st.title("FF Combat Simulator — One-Off 3d6 Outcome")
 
-# --- Sidebar Inputs ---
-st.sidebar.title("Player Configuration")
-pSkill = st.sidebar.slider("Player Skill", 7, 12, 10)
-pStamina = st.sidebar.slider("Player Stamina", 14, 24, 20)
-pLuck = st.sidebar.slider("Player Luck", 7, 12, 9)
+# --- Inputs ---
+pSkill = st.slider("Player Skill", 7, 18, 10)
+pStamina = st.slider("Player Stamina", 14, 24, 20)
+pLuck = st.slider("Player Luck", 7, 12, 9)
 
-st.sidebar.title("Monster Configuration")
-mSkill = st.sidebar.slider("Monster Skill", 1, 18, 10)
-mStamina = st.sidebar.slider("Monster Stamina", 1, 48, 18)
+mSkill = st.slider("Monster Skill", 1, 18, 10)
+mStamina = st.slider("Monster Stamina", 1, 48, 12)
 
-nFights = st.sidebar.number_input("Number of Fights", min_value=1000, max_value=50000, value=10000, step=1000)
+UseLucktoKill = st.checkbox("Use Luck to Kill", True)
+UseLucktoSurvive = st.checkbox("Use Luck to Survive", True)
 
-UseLucktoKill = st.sidebar.checkbox("Use Luck to Kill (at 3 stamina)", value=True)
-UseLucktoSurvive = st.sidebar.checkbox("Use Luck to Survive (take less damage)", value=True)
+nFights = st.number_input("Number of Fights to Simulate", 100, 100000, 10000, step=100)
 
-run_eval = st.sidebar.button("Run Evaluation")
-
-# --- Luck Test ---
+# --- Simulation Function ---
 def testLuck(pLuck):
     return 1 if (random.randint(1, 6) + random.randint(1, 6)) <= pLuck else 0
 
-# --- Fight Simulation ---
-def simulate_fight(pSkill, pStamina, pLuck, mSkill, mStamina, UseLucktoKill, UseLucktoSurvive):
+def simulate_fight(pSkill, pStamina, pLuck, mSkill, mStamina):
     while True:
         if pStamina <= 0:
             return False, pStamina, mStamina, pLuck
@@ -55,8 +50,9 @@ def simulate_fight(pSkill, pStamina, pLuck, mSkill, mStamina, UseLucktoKill, Use
             else:
                 pStamina -= 2
 
-# --- One-off Evaluator ---
+# --- Evaluation ---
 def evaluate_one_off(pSkill, pStamina, pLuck, mSkill, mStamina, UseLucktoKill, UseLucktoSurvive, nFights):
+    player_result_pairs = []
     result_pair_counter = Counter()
     total_duration = 0
 
@@ -65,19 +61,26 @@ def evaluate_one_off(pSkill, pStamina, pLuck, mSkill, mStamina, UseLucktoKill, U
         current_pLuck = pLuck
         current_mStamina = mStamina
 
-        start_time = time.time()
+        start = time.time()
         pWin, final_pStamina, final_mStamina, final_pLuck = simulate_fight(
-            pSkill, current_pStamina, current_pLuck, mSkill, current_mStamina,
-            UseLucktoKill, UseLucktoSurvive)
-        end_time = time.time()
+            pSkill, current_pStamina, current_pLuck, mSkill, current_mStamina
+        )
+        end = time.time()
 
-        total_duration += (end_time - start_time)
+        total_duration += (end - start)
 
         if pWin:
-            pair = (final_pStamina, final_pLuck)
-            result_pair_counter[pair] += 1
+            result_pair_counter[(final_pStamina, final_pLuck)] += 1
+            player_result_pairs.append((final_pStamina, final_pLuck))
 
-    # 3d6 probability map
+    st.subheader("One-Off Evaluation")
+    st.write(f"Player: Skill {pSkill}, Stamina {pStamina}, Luck {pLuck}")
+    st.write(f"Monster: Skill {mSkill}, Stamina {mStamina}")
+    st.write(f"UseLucktoKill: {UseLucktoKill}, UseLucktoSurvive: {UseLucktoSurvive}")
+    st.write(f"Fights simulated: {nFights}")
+    st.write(f"Time taken: {total_duration:.2f} seconds")
+
+    # 3d6 roll probabilities
     roll_probs = {
         3: 1/216, 4: 3/216, 5: 6/216, 6: 10/216, 7: 15/216, 8: 21/216,
         9: 25/216, 10: 27/216, 11: 27/216, 12: 25/216, 13: 21/216,
@@ -99,44 +102,33 @@ def evaluate_one_off(pSkill, pStamina, pLuck, mSkill, mStamina, UseLucktoKill, U
     idx = 0
     for roll, prob in roll_probs.items():
         cum_threshold += prob
-        if not expanded:
-            mapping[roll] = ("—", "—")
-            continue
         while idx < len(cumulative) and cumulative[idx] < cum_threshold:
             idx += 1
-        if idx >= len(expanded):
-            idx = len(expanded) - 1
-        mapping[roll] = expanded[idx]
-
-    # Choose a 3d6 roll
-    actual_roll = random.randint(1, 6) + random.randint(1, 6) + random.randint(1, 6)
-    if not expanded:
-    mapped_outcome = ("—", "—")
-else:
         if not expanded:
+            mapping[roll] = ("—", "—")
+        else:
+            mapping[roll] = expanded[min(idx, len(expanded) - 1)]
+
+    actual_roll = random.randint(1, 6) + random.randint(1, 6) + random.randint(1, 6)
+
+    if not expanded:
         mapped_outcome = ("—", "—")
     else:
         mapped_outcome = mapping.get(actual_roll, ("—", "—"))
 
-    st.markdown("### One-Off Evaluation")
-    st.write(f"Player: Skill {pSkill}, Stamina {pStamina}, Luck {pLuck}")
-    st.write(f"Monster: Skill {mSkill}, Stamina {mStamina}")
-    st.write(f"UseLucktoKill: {UseLucktoKill}, UseLucktoSurvive: {UseLucktoSurvive}")
-    st.write(f"Fights simulated: {nFights}")
-    st.write(f"Time taken: {total_duration:.2f} seconds")
     st.write(f"🎲 Random 3d6 roll: **{actual_roll}**")
     st.write(f"🧾 Mapped outcome: **Stamina {mapped_outcome[0]}, Luck {mapped_outcome[1]}**")
-if mapped_outcome == ('—', '—'):
-    st.markdown("<br><span style='color:red; font-weight:bold;'>Your Adventure Ends Here, slain in combat.</span>", unsafe_allow_html=True)
 
-if run_eval:
-    evaluate_one_off(
-        pSkill=pSkill,
-        pStamina=pStamina,
-        pLuck=pLuck,
-        mSkill=mSkill,
-        mStamina=mStamina,
-        UseLucktoKill=UseLucktoKill,
-        UseLucktoSurvive=UseLucktoSurvive,
-        nFights=nFights
-    )
+    if mapped_outcome == ("—", "—"):
+        st.markdown("<br><span style='color:red; font-weight:bold;'>Your Adventure Ends Here, slain in combat.</span>", unsafe_allow_html=True)
+
+evaluate_one_off(
+    pSkill=pSkill,
+    pStamina=pStamina,
+    pLuck=pLuck,
+    mSkill=mSkill,
+    mStamina=mStamina,
+    UseLucktoKill=UseLucktoKill,
+    UseLucktoSurvive=UseLucktoSurvive,
+    nFights=nFights
+)
