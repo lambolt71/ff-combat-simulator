@@ -78,7 +78,9 @@ with col1:
         st.markdown(f"""
         <div style="border:1px solid #888;padding:10px;border-radius:10px;background-color:#111111">
             <b>⚔️ Player Stats</b><br>
-            Skill: {pSkill} &nbsp;&nbsp;&nbsp; Stamina: {pStamina} &nbsp;&nbsp;&nbsp; Luck: {pLuck}
+            <span style="font-size:18px;">
+                Skill: {pSkill} &nbsp;&nbsp;&nbsp; Stamina: {pStamina} &nbsp;&nbsp;&nbsp; Luck: {pLuck}
+            </span>
         </div><br>
         <div style="border:1px solid #888;padding:10px;border-radius:10px;background-color:#1a1a1a">
             <b>💀 Monster Stats</b><br>
