@@ -6,7 +6,7 @@ from collections import Counter
 import pandas as pd
 
 st.set_page_config(page_title="FF Combat One-Off (Flat %)", layout="centered")
-st.title("FF Combat Simulator — One-Off Flat Percentile Outcome")
+st.title("FF Single Roll Combat Calculator")
 
 # --- Inputs ---
 col1, col2 = st.columns([1, 2])
