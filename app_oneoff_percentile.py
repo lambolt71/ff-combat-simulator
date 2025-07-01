@@ -72,8 +72,8 @@ def evaluate_one_off(pSkill, pStamina, pLuck, mSkill, mStamina, UseLucktoKill, U
             result_pair_counter[(final_pStamina, final_pLuck)] += 1
             player_result_pairs.append((final_pStamina, final_pLuck))
         else:
-            result_pair_counter[("0", "0")] += 1
-            player_result_pairs.append(("0", "0"))
+            result_pair_counter[(0, 0)] += 1
+            player_result_pairs.append((0, 0))
 
     st.subheader("Single Roll Fight Simulator")
 
@@ -127,7 +127,7 @@ def evaluate_one_off(pSkill, pStamina, pLuck, mSkill, mStamina, UseLucktoKill, U
     </div>
     """, unsafe_allow_html=True)
 
-    if mapped_outcome == ("0", "0"):
+    if mapped_outcome == (0, 0):
         st.markdown("<br><span style='color:red; font-weight:bold;'>Your Adventure Ends Here, slain in combat.</span>", unsafe_allow_html=True)
     else:
         st.markdown("<br><span style='color:limegreen; font-weight:bold;'>You have defeated your opponent!</span>", unsafe_allow_html=True)
