@@ -113,7 +113,10 @@ def evaluate_one_off(pSkill, pStamina, pLuck, mSkill, mStamina, UseLucktoKill, U
     if not expanded:
     mapped_outcome = ("—", "—")
 else:
-    mapped_outcome = mapping.get(actual_roll, ("—", "—"))
+        if not expanded:
+        mapped_outcome = ("—", "—")
+    else:
+        mapped_outcome = mapping.get(actual_roll, ("—", "—"))
 
     st.markdown("### One-Off Evaluation")
     st.write(f"Player: Skill {pSkill}, Stamina {pStamina}, Luck {pLuck}")
