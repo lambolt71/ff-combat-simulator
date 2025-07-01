@@ -84,7 +84,9 @@ with col1:
         </div><br>
         <div style="border:1px solid #888;padding:10px;border-radius:10px;background-color:#1a1a1a">
             <b>💀 Monster Stats</b><br>
-            Skill: {mSkill} &nbsp;&nbsp;&nbsp; Stamina: {mStamina}
+             <span style="font-size:2rem;">
+                Skill: {mSkill} &nbsp;&nbsp;&nbsp; Stamina: {mStamina}
+             </span>
         </div><br>
         """, unsafe_allow_html=True)
 
@@ -113,10 +115,12 @@ with col1:
         st.markdown(f"""
         <div style="border:1px dashed #666;padding:10px;margin-top:15px;border-radius:10px;background-color:#222;">
             🎲 <b>Random Roll:</b> {actual_percent:.2%}<br>
-            🧾 <b>Player Stats after fight:</b><br>  
-            Skill: <b>{pSkill}</b> &nbsp;&nbsp;&nbsp; 
-            Stamina: <b>{mapped_outcome[0]}</b> &nbsp;&nbsp;&nbsp; 
-            Luck: <b>{mapped_outcome[1]}</b>
+            🧾 <b>Player Stats after fight:</b><br>
+            <span style="font-size:2rem;">
+                Skill: <b>{pSkill}</b> &nbsp;&nbsp;&nbsp; 
+                Stamina: <b>{mapped_outcome[0]}</b> &nbsp;&nbsp;&nbsp; 
+                Luck: <b>{mapped_outcome[1]}</b>
+            </span>
         </div>
         """, unsafe_allow_html=True)
 
