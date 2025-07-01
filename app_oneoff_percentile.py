@@ -94,8 +94,8 @@ with col1:
         else:
             mapped_outcome = ("—", "—")
 
-        st.write(f"🎯 Random percentile: \t**{actual_percent:.2%}**")
-        st.write(f"🧾 Player Stats after fight: \t**Stamina {mapped_outcome[0]}, Luck {mapped_outcome[1]}**")
+        st.write(f"🎯 Random Roll (%): \t**{actual_percent:.2%}**")
+        st.write(f"🧾 Player Stats after fight:\tSkill: {pSkill} \t**Stamina: {mapped_outcome[0]}, Luck: {mapped_outcome[1]}**")
 
         if mapped_outcome == ("—", "—"):
             st.markdown("<br><span style='color:red; font-weight:bold;'>Your Adventure Ends Here, slain in combat.</span>", unsafe_allow_html=True)
