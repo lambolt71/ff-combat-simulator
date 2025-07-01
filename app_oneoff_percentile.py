@@ -106,7 +106,7 @@ with col1:
         if expanded and percentile_index < len(expanded):
             mapped_outcome = expanded[percentile_index]
         else:
-            mapped_outcome = ("—", "—")
+            mapped_outcome = ("0", "0")
 
         st.markdown(f"""
         <div style="border:1px dashed #666;padding:10px;margin-top:15px;border-radius:10px;background-color:#222;">
