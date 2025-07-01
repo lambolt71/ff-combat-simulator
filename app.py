@@ -5,7 +5,8 @@ import statistics
 import time
 from collections import Counter
 import pandas as pd
-import matplotlib.pyplot as plt
+
+st.title("FF Combat Simulator — Full Mapping")
 
 # --- Sidebar Inputs ---
 st.sidebar.title("Player Configuration")
@@ -22,14 +23,14 @@ nFights = st.sidebar.number_input("Number of Fights", min_value=1000, max_value=
 UseLucktoKill = st.sidebar.checkbox("Use Luck to Kill (at 3 stamina)", value=True)
 UseLucktoSurvive = st.sidebar.checkbox("Use Luck to Survive (take less damage)", value=True)
 
-run_sim = st.sidebar.button("Run Simulation")
+run_eval = st.sidebar.button("Run Evaluation")
 
-# --- Function to test luck ---
+# --- Luck Test ---
 def testLuck(pLuck):
     return 1 if (random.randint(1, 6) + random.randint(1, 6)) <= pLuck else 0
 
-# --- Simulate one fight ---
-def simulate_fight(pSkill, pStamina, pLuck, mSkill, mStamina):
+# --- Fight Simulation ---
+def simulate_fight(pSkill, pStamina, pLuck, mSkill, mStamina, UseLucktoKill, UseLucktoSurvive):
     while True:
         if pStamina <= 0:
             return False, pStamina, mStamina, pLuck
@@ -54,13 +55,10 @@ def simulate_fight(pSkill, pStamina, pLuck, mSkill, mStamina):
             else:
                 pStamina -= 2
 
-# --- Run simulation ---
-if run_sim:
-    player_result_pairs = []
+# --- One-off Evaluator ---
+def evaluate_one_off(pSkill, pStamina, pLuck, mSkill, mStamina, UseLucktoKill, UseLucktoSurvive, nFights):
     result_pair_counter = Counter()
     total_duration = 0
-    player_wins = 0
-    monster_wins = 0
 
     for _ in range(nFights):
         current_pStamina = pStamina
@@ -69,25 +67,17 @@ if run_sim:
 
         start_time = time.time()
         pWin, final_pStamina, final_mStamina, final_pLuck = simulate_fight(
-            pSkill, current_pStamina, current_pLuck, mSkill, current_mStamina)
+            pSkill, current_pStamina, current_pLuck, mSkill, current_mStamina,
+            UseLucktoKill, UseLucktoSurvive)
         end_time = time.time()
 
         total_duration += (end_time - start_time)
 
         if pWin:
-            player_wins += 1
             pair = (final_pStamina, final_pLuck)
-            player_result_pairs.append(pair)
             result_pair_counter[pair] += 1
-        else:
-            monster_wins += 1
 
-    st.markdown(f"### Results")
-    st.write(f"Player Wins: {player_wins}")
-    st.write(f"Monster Wins: {monster_wins}")
-    st.write(f"Average fight duration: {total_duration / nFights:.6f} seconds")
-
-    # Map to 3d6
+    # 3d6 probability map
     roll_probs = {
         3: 1/216, 4: 3/216, 5: 6/216, 6: 10/216, 7: 15/216, 8: 21/216,
         9: 25/216, 10: 27/216, 11: 27/216, 12: 25/216, 13: 21/216,
@@ -109,21 +99,36 @@ if run_sim:
     idx = 0
     for roll, prob in roll_probs.items():
         cum_threshold += prob
+        if not expanded:
+            mapping[roll] = ("—", "—")
+            continue
         while idx < len(cumulative) and cumulative[idx] < cum_threshold:
             idx += 1
         if idx >= len(expanded):
             idx = len(expanded) - 1
         mapping[roll] = expanded[idx]
 
-    df = pd.DataFrame([
-        {"3d6 Roll": roll, "Final Outcome": f"Stamina {mapping[roll][0]}, Luck {mapping[roll][1]}"}
-            for roll in range(3, 19)
-        ])
+    # Choose a 3d6 roll
+    # No one-off roll here
+    mapped_outcome = mapping.get(actual_roll, ("—", "—"))
 
-    st.markdown("### 3d6 Roll → (Stamina, Luck) Mapping")
-    st.dataframe(df)
+    st.markdown("### Full Simulation and Mapping")
+    st.write(f"Player: Skill {pSkill}, Stamina {pStamina}, Luck {pLuck}")
+    st.write(f"Monster: Skill {mSkill}, Stamina {mStamina}")
+    st.write(f"UseLucktoKill: {UseLucktoKill}, UseLucktoSurvive: {UseLucktoSurvive}")
+    st.write(f"Fights simulated: {nFights}")
+    st.write(f"Time taken: {total_duration:.2f} seconds")
+    st.write(f"🎲 Random 3d6 roll: **{actual_roll}**")
+    # Mapped outcome shown below in full mapping table
 
-    st.markdown("### Player Result Distribution")
-    dist = pd.DataFrame(player_result_pairs, columns=["Stamina", "Luck"])
-    st.bar_chart(dist["Stamina"].value_counts().sort_index())
-    st.bar_chart(dist["Luck"].value_counts().sort_index())
+if run_eval:
+    evaluate_one_off(
+        pSkill=pSkill,
+        pStamina=pStamina,
+        pLuck=pLuck,
+        mSkill=mSkill,
+        mStamina=mStamina,
+        UseLucktoKill=UseLucktoKill,
+        UseLucktoSurvive=UseLucktoSurvive,
+        nFights=nFights
+    )

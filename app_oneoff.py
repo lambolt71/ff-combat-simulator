@@ -120,6 +120,8 @@ def evaluate_one_off(pSkill, pStamina, pLuck, mSkill, mStamina, UseLucktoKill, U
     st.write(f"Time taken: {total_duration:.2f} seconds")
     st.write(f"🎲 Random 3d6 roll: **{actual_roll}**")
     st.write(f"🧾 Mapped outcome: **Stamina {mapped_outcome[0]}, Luck {mapped_outcome[1]}**")
+if mapped_outcome == ('—', '—'):
+    st.markdown("<br><span style='color:red; font-weight:bold;'>Your Adventure Ends Here, slain in combat.</span>", unsafe_allow_html=True)
 
 if run_eval:
     evaluate_one_off(
