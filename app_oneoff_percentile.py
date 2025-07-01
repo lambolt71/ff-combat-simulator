@@ -72,12 +72,12 @@ with col1:
                 result_pair_counter[(final_pStamina, final_pLuck)] += 1
                 player_result_pairs.append((final_pStamina, final_pLuck))
 
-        st.subheader("One-Off Evaluation")
-        st.write(f"Player: Skill {pSkill}, Stamina {pStamina}, Luck {pLuck}")
-        st.write(f"Monster: Skill {mSkill}, Stamina {mStamina}")
-        st.write(f"UseLucktoKill: {UseLucktoKill}, UseLucktoSurvive: {UseLucktoSurvive}")
-        st.write(f"Fights simulated: {nFights}")
-        st.write(f"Time taken: {total_duration:.2f} seconds")
+        st.subheader("Single Roll Fight Simulator")
+        st.write(f"Player Stats: \tSkill {pSkill}, \tStamina {pStamina}, \tLuck {pLuck}")
+        st.write(f"Monster Stats: \tSkill {mSkill}, \tStamina {mStamina}")
+        st.write(f"UseLucktoKill: \t{UseLucktoKill}, \nUseLucktoSurvive: \t{UseLucktoSurvive}")
+        st.write(f"Fights simulated: \t{nFights}")
+        st.write(f"Time taken: \t{total_duration:.2f} seconds")
 
         total = sum(result_pair_counter.values())
         expanded = []
@@ -94,8 +94,8 @@ with col1:
         else:
             mapped_outcome = ("—", "—")
 
-        st.write(f"🎯 Random percentile: **{actual_percent:.2%}**")
-        st.write(f"🧾 Mapped outcome: **Stamina {mapped_outcome[0]}, Luck {mapped_outcome[1]}**")
+        st.write(f"🎯 Random percentile: \t**{actual_percent:.2%}**")
+        st.write(f"🧾 Player Stats after fight: \t**Stamina {mapped_outcome[0]}, Luck {mapped_outcome[1]}**")
 
         if mapped_outcome == ("—", "—"):
             st.markdown("<br><span style='color:red; font-weight:bold;'>Your Adventure Ends Here, slain in combat.</span>", unsafe_allow_html=True)
