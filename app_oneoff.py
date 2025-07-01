@@ -99,6 +99,9 @@ def evaluate_one_off(pSkill, pStamina, pLuck, mSkill, mStamina, UseLucktoKill, U
     idx = 0
     for roll, prob in roll_probs.items():
         cum_threshold += prob
+        if not expanded:
+            mapping[roll] = ("—", "—")
+            continue
         while idx < len(cumulative) and cumulative[idx] < cum_threshold:
             idx += 1
         if idx >= len(expanded):
@@ -107,7 +110,7 @@ def evaluate_one_off(pSkill, pStamina, pLuck, mSkill, mStamina, UseLucktoKill, U
 
     # Choose a 3d6 roll
     actual_roll = random.randint(1, 6) + random.randint(1, 6) + random.randint(1, 6)
-    mapped_outcome = mapping.get(actual_roll, ("?", "?"))
+    mapped_outcome = mapping.get(actual_roll, ("—", "—"))
 
     st.markdown("### One-Off Evaluation")
     st.write(f"Player: Skill {pSkill}, Stamina {pStamina}, Luck {pLuck}")
