@@ -112,9 +112,9 @@ with col1:
         <div style="border:1px dashed #666;padding:10px;margin-top:15px;border-radius:10px;background-color:#222;">
             🎲 <b>Random Roll:</b> {actual_percent:.2%}<br>
             🧾 <b>Player Stats after fight:</b><br>  
-            Skill: {pSkill} &nbsp;&nbsp;&nbsp; 
-            <b>Stamina: {mapped_outcome[0]}</b> &nbsp;&nbsp;&nbsp; 
-            <b>Luck: {mapped_outcome[1]}</b>
+            Skill: <b>{pSkill}</b> &nbsp;&nbsp;&nbsp; 
+            Stamina: <b>{mapped_outcome[0]}</b> &nbsp;&nbsp;&nbsp; 
+            Luck: <b>{mapped_outcome[1]}</b>
         </div>
         """, unsafe_allow_html=True)
 
