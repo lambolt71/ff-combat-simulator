@@ -110,6 +110,9 @@ def evaluate_one_off(pSkill, pStamina, pLuck, mSkill, mStamina, UseLucktoKill, U
 
     # Choose a 3d6 roll
     actual_roll = random.randint(1, 6) + random.randint(1, 6) + random.randint(1, 6)
+    if not expanded:
+    mapped_outcome = ("—", "—")
+else:
     mapped_outcome = mapping.get(actual_roll, ("—", "—"))
 
     st.markdown("### One-Off Evaluation")
