@@ -77,11 +77,11 @@ with col1:
         # Styled Player and Monster Stat Blocks
         st.markdown(f"""
         <div style="border:1px solid #888;padding:10px;border-radius:10px;background-color:#111111">
-            <b>🧍 Player Stats</b><br>
+            <b>⚔️ Player Stats</b><br>
             Skill: {pSkill} &nbsp;&nbsp;&nbsp; Stamina: {pStamina} &nbsp;&nbsp;&nbsp; Luck: {pLuck}
         </div><br>
         <div style="border:1px solid #888;padding:10px;border-radius:10px;background-color:#1a1a1a">
-            <b>👾 Monster Stats</b><br>
+            <b>💀 Monster Stats</b><br>
             Skill: {mSkill} &nbsp;&nbsp;&nbsp; Stamina: {mStamina}
         </div><br>
         """, unsafe_allow_html=True)
@@ -110,7 +110,7 @@ with col1:
 
         st.markdown(f"""
         <div style="border:1px dashed #666;padding:10px;margin-top:15px;border-radius:10px;background-color:#222;">
-            🎯 <b>Random Roll:</b> {actual_percent:.2%}<br>
+            🎲 <b>Random Roll:</b> {actual_percent:.2%}<br>
             🧾 <b>Player Stats after fight:</b><br>  
             Skill: {pSkill} &nbsp;&nbsp;&nbsp; 
             <b>Stamina: {mapped_outcome[0]}</b> &nbsp;&nbsp;&nbsp; 
