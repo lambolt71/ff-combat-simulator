@@ -120,6 +120,8 @@ with col1:
 
         if mapped_outcome == ("0", "0"):
             st.markdown("<br><span style='color:red; font-weight:bold;'>Your Adventure Ends Here, slain in combat.</span>", unsafe_allow_html=True)
+        else:
+            st.markdown("<br><span style='color:limegreen; font-weight:bold;'>You have defeated your opponent!</span>", unsafe_allow_html=True)
 
     if st.button("Run Simulation"):
         with col2:
