@@ -122,13 +122,14 @@ def evaluate_one_off(pSkill, pStamina, pLuck, mSkill, mStamina, UseLucktoKill, U
     if mapped_outcome == ("—", "—"):
         st.markdown("<br><span style='color:red; font-weight:bold;'>Your Adventure Ends Here, slain in combat.</span>", unsafe_allow_html=True)
 
-evaluate_one_off(
-    pSkill=pSkill,
-    pStamina=pStamina,
-    pLuck=pLuck,
-    mSkill=mSkill,
-    mStamina=mStamina,
-    UseLucktoKill=UseLucktoKill,
-    UseLucktoSurvive=UseLucktoSurvive,
-    nFights=nFights
-)
+if st.button("Run Simulation"):
+    evaluate_one_off(
+        pSkill=pSkill,
+        pStamina=pStamina,
+        pLuck=pLuck,
+        mSkill=mSkill,
+        mStamina=mStamina,
+        UseLucktoKill=UseLucktoKill,
+        UseLucktoSurvive=UseLucktoSurvive,
+        nFights=nFights
+    )
