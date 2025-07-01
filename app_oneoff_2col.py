@@ -125,7 +125,7 @@ with col1:
             st.markdown("<br><span style='color:red; font-weight:bold;'>Your Adventure Ends Here, slain in combat.</span>", unsafe_allow_html=True)
     
     if st.button("Run Simulation"):
-    with col2:
+        with col2:
             evaluate_one_off(
                 pSkill=pSkill,
                 pStamina=pStamina,
