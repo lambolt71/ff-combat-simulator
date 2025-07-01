@@ -43,7 +43,7 @@ def simulate_fight(pSkill, pStamina, pLuck, mSkill, mStamina):
             else:
                 mStamina -= 2
         elif pAttack < mAttack:
-            if UseLucktoSurvive and pLuck >= 2:
+            if UseLucktoSurvive and pLuck >= 2 and pStamina == 2:
                 luck_bonus = testLuck(pLuck)
                 pStamina -= (2 - luck_bonus)
                 pLuck -= 1
