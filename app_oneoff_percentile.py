@@ -73,11 +73,26 @@ with col1:
                 player_result_pairs.append((final_pStamina, final_pLuck))
 
         st.subheader("Single Roll Fight Simulator")
-        st.write(f"Player Stats: \tSkill {pSkill}, \tStamina {pStamina}, \tLuck {pLuck}")
-        st.write(f"Monster Stats: \tSkill {mSkill}, \tStamina {mStamina}")
-        st.write(f"UseLucktoKill: \t{UseLucktoKill}, \nUseLucktoSurvive: \t{UseLucktoSurvive}")
-        st.write(f"Fights simulated: \t{nFights}")
-        st.write(f"Time taken: \t{total_duration:.2f} seconds")
+
+        # Styled Player and Monster Stat Blocks
+        st.markdown(f"""
+        <div style="border:1px solid #888;padding:10px;border-radius:10px;background-color:#111111">
+            <b>🧍 Player Stats</b><br>
+            Skill: {pSkill} &nbsp;&nbsp;&nbsp; Stamina: {pStamina} &nbsp;&nbsp;&nbsp; Luck: {pLuck}
+        </div><br>
+        <div style="border:1px solid #888;padding:10px;border-radius:10px;background-color:#1a1a1a">
+            <b>👾 Monster Stats</b><br>
+            Skill: {mSkill} &nbsp;&nbsp;&nbsp; Stamina: {mStamina}
+        </div><br>
+        """, unsafe_allow_html=True)
+
+        st.markdown(f"""
+        **Options:**  
+        • UseLucktoKill: `{UseLucktoKill}`  
+        • UseLucktoSurvive: `{UseLucktoSurvive}`  
+        **Fights Simulated:** {nFights}  
+        **Time Taken:** {total_duration:.2f} seconds
+        """)
 
         total = sum(result_pair_counter.values())
         expanded = []
@@ -85,7 +100,6 @@ with col1:
             expanded.extend([pair] * count)
         expanded.sort()
 
-        # Flat percentile roll from 0.00 to 1.00
         actual_percent = random.random()
         percentile_index = int(actual_percent * len(expanded)) if expanded else -1
 
@@ -94,8 +108,15 @@ with col1:
         else:
             mapped_outcome = ("—", "—")
 
-        st.write(f"🎯 Random Roll (%): \t**{actual_percent:.2%}**")
-        st.write(f"🧾 Player Stats after fight:\tSkill: {pSkill} \t**Stamina: {mapped_outcome[0]}, Luck: {mapped_outcome[1]}**")
+        st.markdown(f"""
+        <div style="border:1px dashed #666;padding:10px;margin-top:15px;border-radius:10px;background-color:#222;">
+            🎯 <b>Random Roll:</b> {actual_percent:.2%}<br>
+            🧾 <b>Player Stats after fight:</b>  
+            Skill: {pSkill} &nbsp;&nbsp;&nbsp; 
+            <b>Stamina: {mapped_outcome[0]}</b> &nbsp;&nbsp;&nbsp; 
+            <b>Luck: {mapped_outcome[1]}</b>
+        </div>
+        """, unsafe_allow_html=True)
 
         if mapped_outcome == ("—", "—"):
             st.markdown("<br><span style='color:red; font-weight:bold;'>Your Adventure Ends Here, slain in combat.</span>", unsafe_allow_html=True)
