@@ -10,17 +10,17 @@ st.title("FF Single Roll Combat Calculator")
 # --- Inputs ---
 col1, col2 = st.columns([1, 2])
 with col1:
-    pSkill = st.slider("Player Skill", 7, 18, 10)
-    pStamina = st.slider("Player Stamina", 14, 24, 20)
-    pLuck = st.slider("Player Luck", 7, 12, 9)
+    pSkill = st.slider("Player Skill", 1, 24, 10)
+    pStamina = st.slider("Player Stamina", 1, 36, 20)
+    pLuck = st.slider("Player Luck", 1, 18, 9)
 
-    mSkill = st.slider("Monster Skill", 1, 18, 10)
-    mStamina = st.slider("Monster Stamina", 1, 48, 12)
+    mSkill = st.slider("Monster Skill", 1, 24, 7)
+    mStamina = st.slider("Monster Stamina", 1, 48, 8)
 
     UseLucktoKill = st.checkbox("Use Luck to Kill", True)
     UseLucktoSurvive = st.checkbox("Use Luck to Survive", True)
 
-    nFights = st.number_input("Number of Fights to Simulate", 100, 100000, 10000, step=100)
+    nFights = st.number_input("Number of Fights to Simulate", 1, 100000, 10000, step=100)
 
 # --- Functions (moved outside of col1) ---
 def testLuck(pLuck):
