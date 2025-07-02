@@ -54,7 +54,7 @@ def simulate_fight(pSkill, pStamina, pLuck, mSkill, mStamina):
             else:
                 pStamina -= 2
 
-def evaluate_one_off(pSkill, pStamina, pLuck, mSkill, mStamina, UseLucktoKill, UseLucktoSurvive, nFights):
+def evaluate_one_off(pSkill, pStamina, pLuck, mSkill, mStamina, UseLucktoDamage, UseLucktoKill, UseLucktoAvoidWounds, UseLucktoSurvive, nFights):
     player_result_pairs = []
     result_pair_counter = Counter()
     total_duration = 0
@@ -78,6 +78,9 @@ def evaluate_one_off(pSkill, pStamina, pLuck, mSkill, mStamina, UseLucktoKill, U
             result_pair_counter[(0, 0)] += 1
             player_result_pairs.append((0, 0))
 
+    n_wins = sum(1 for stamina, _ in player_result_pairs if stamina > 0)
+    win_rate = (n_wins / nFights) * 100
+
     st.subheader("Single Roll Fight Simulator")
 
     # Styled Player and Monster Stat Blocks
@@ -96,11 +99,22 @@ def evaluate_one_off(pSkill, pStamina, pLuck, mSkill, mStamina, UseLucktoKill, U
     </div><br>
     """, unsafe_allow_html=True)
 
+    #st.markdown(f"""
+    #**Options:**  
+    #• UseLucktoKill: `{UseLucktoKill}`  
+    #• UseLucktoSurvive: `{UseLucktoSurvive}`  
+    #**Fights Simulated:** {nFights}  
+    #**Time Taken:** {total_duration:.2f} seconds
+    #""")
+
     st.markdown(f"""
     **Options:**  
     • UseLucktoKill: `{UseLucktoKill}`  
     • UseLucktoSurvive: `{UseLucktoSurvive}`  
+    • UseLucktoDamage: `{UseLucktoDamage}`  
+    • UseLucktoAvoidWounds: `{UseLucktoAvoidWounds}`  
     **Fights Simulated:** {nFights}  
+    **Player Win Rate:** {win_rate:.1f}%  
     **Time Taken:** {total_duration:.2f} seconds
     """)
 
@@ -144,7 +158,9 @@ if st.button("Run Simulation"):
             pLuck=pLuck,
             mSkill=mSkill,
             mStamina=mStamina,
+            UseLucktoDamage=UseLucktoDamage,
             UseLucktoKill=UseLucktoKill,
+            UseLucktoAvoidWounds=UseLucktoAvoidWounds,
             UseLucktoSurvive=UseLucktoSurvive,
             nFights=nFights
         )
