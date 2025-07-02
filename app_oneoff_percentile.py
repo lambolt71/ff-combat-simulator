@@ -17,8 +17,11 @@ with col1:
     mSkill = st.slider("Monster Skill", 1, 24, 7)
     mStamina = st.slider("Monster Stamina", 1, 48, 8)
 
-    UseLucktoKill = st.checkbox("Use Luck to Kill", True)
-    UseLucktoSurvive = st.checkbox("Use Luck to Survive", True)
+    UseLucktoDamage = st.checkbox("Always use Luck when damaging", False)
+    UseLucktoKill = st.checkbox("Use Luck only to Kill", True)
+
+    UseLucktoAvoidWounds = st.checkbox("Always use Luck when wounded", False)
+    UseLucktoSurvive = st.checkbox("Use Luck only to Survive", True)
 
     nFights = st.number_input("Number of Fights to Simulate", 1, 100000, 10000, step=100)
 
@@ -37,14 +40,14 @@ def simulate_fight(pSkill, pStamina, pLuck, mSkill, mStamina):
         mAttack = mSkill + random.randint(1, 6) + random.randint(1, 6)
 
         if pAttack > mAttack:
-            if UseLucktoKill and mStamina == 3 and pLuck >= 2:
+            if (UseLucktoDamage or (UseLucktoKill and mStamina == 3)) and pLuck >= 1:
                 luck_bonus = testLuck(pLuck)
                 mStamina -= (2 + luck_bonus)
                 pLuck -= 1
             else:
                 mStamina -= 2
         elif pAttack < mAttack:
-            if UseLucktoSurvive and pLuck >= 2 and pStamina == 2:
+            if (UseLucktoAvoidWounds or (UseLucktoSurvive and pStamina == 2)) and pLuck >= 1:
                 luck_bonus = testLuck(pLuck)
                 pStamina -= (2 - luck_bonus)
                 pLuck -= 1
